@@ -1,7 +1,7 @@
 import re
 
-URL_GEO = 'http://api.crackle.com/Service.svc/geo/country?format=json'
-URL_MEDIA_DETAILS = 'http://api.crackle.com/Service.svc/details/media/%s/%s?format=json'
+URL_GEO = 'http://ios-api.crackle.com/Service.svc/geo/country?format=json'
+URL_MEDIA_DETAILS = 'http://ios-api.crackle.com/Service.svc/details/media/%s/%s?format=json'
 
 ####################################################################################################
 
@@ -80,7 +80,6 @@ def MediaObjectsForURL(url):
             video_resolution = 480,
             optimized_for_streaming = True,
             audio_channels = 2,
-            protocol = Protocol.HTTPMP4Video,
             parts = [PartObject(key=Callback(PlayVideo, url = url, res = "480p"))]
         ),
         MediaObject(
@@ -90,7 +89,6 @@ def MediaObjectsForURL(url):
             video_resolution = 360,
             optimized_for_streaming = True,
             audio_channels = 2,
-            protocol = Protocol.HTTPMP4Video,
             parts = [PartObject(key=Callback(PlayVideo, url = url, res = "360p"))]
         )
     ]
@@ -103,7 +101,7 @@ def PlayVideo(url, res):
     details = JSON.ObjectFromURL(URL_MEDIA_DETAILS % (video_id, geo_code))
 
     video_url = details['ThumbnailExternal']
-    video_url = re.sub(r'//.*?\.crackle.com/', "//cdn1.crackle.com/", video_url)
+    video_url = re.sub(r'//.*?\.crackle.com/', "//wpcdn1-media-us-am.crackle.com/", video_url)
     video_url = video_url[:video_url.rfind('_') + 1]
     video_url = video_url + res + '.mp4'
     return Redirect(video_url)
