@@ -116,9 +116,6 @@ def ListTitles(title, id, location):
     for title in playlist['MediaList']:
       
       url = title['XItemId']
-      Log("IABI")
-      Log(url)
-
       video_title = title['Title']
       summary = title['Description']
       thumb = title['ThumbnailExternal']
