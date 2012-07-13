@@ -18,10 +18,10 @@ GENRE_HORROR = 'Horror'
 GENRE_SCI_FI = 'Sci-Fi'
 GENRE_THRILLER = 'Thriller'
 
-URL_GEO = 'http://api.crackle.com/Service.svc/geo/country?format=json'
-URL_CATEGORIES = 'http://api.crackle.com/Service.svc/browse/%s/full/%s/alpha/%s?format=json'
-URL_DETAILS = 'http://api.crackle.com/Service.svc/channel/%s/folders/%s?format=json'
-URL_MEDIA_DETAILS = 'http://api.crackle.com/Service.svc/details/media/%s/%s?format=json'
+URL_GEO = 'http://ios-api.crackle.com/Service.svc/geo/country?format=json'
+URL_CATEGORIES = 'http://ios-api.crackle.com/Service.svc/browse/%s/full/%s/alpha/%s?format=json'
+URL_DETAILS = 'http://ios-api.crackle.com/Service.svc/channel/%s/folders/%s?format=json'
+URL_MEDIA_DETAILS = 'http://ios-api.crackle.com/Service.svc/details/media/%s/%s?format=json'
 
 ###################################################################################################
 
