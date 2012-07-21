@@ -148,8 +148,14 @@ def ListTitles(title, id, location):
       elif title['RootChannel'] == 'Television' or title['RootChannel'] == 'Originals':
           
         show = title['ParentChannelName']
-        season = int(title['Season'])
-        index = int(title['Episode'])
+
+        season = None
+        try: season = int(title['Season'])
+        except: pass
+        
+        index = None
+        try: index = int(title['Episode'])
+        except: pass
           
         oc.add(EpisodeObject(
           url = url,
