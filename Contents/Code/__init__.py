@@ -114,8 +114,7 @@ def ListTitles(title, id, location):
 
   for playlist in titles['FolderList'][0]['PlaylistList']:
     for title in playlist['MediaList']:
-      
-      url = title['XItemId']
+      url = title['DetailsURL']
       video_title = title['Title']
       summary = title['Description']
       thumb = title['ThumbnailExternal']
