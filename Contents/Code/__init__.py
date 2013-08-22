@@ -2,9 +2,6 @@ import re
 
 TITLE = 'Crackle'
 
-ART = 'art-default.jpg'
-ICON = 'icon-default.png'
-
 TYPE_MOVIES = 'movies'
 TYPE_TELEVISION = 'television'
 TYPE_ORIGINALS = 'originals'
@@ -24,44 +21,34 @@ URL_DETAILS = 'http://ios-api.crackle.com/Service.svc/channel/%s/folders/%s?form
 URL_MEDIA_DETAILS = 'http://ios-api.crackle.com/Service.svc/details/media/%s/%s?format=json'
 
 ###################################################################################################
-
 def Start():
-    
-  # Set the types of view groups
+
   Plugin.AddViewGroup('List', viewMode = 'List', mediaType = 'items')
   Plugin.AddViewGroup('InfoList', viewMode = 'InfoList', mediaType = 'items')
-    
-  # Set the default ObjectContainer attributes
+
   ObjectContainer.title1 = TITLE
   ObjectContainer.view_group = 'List'
-  ObjectContainer.art = R(ART)
 
-  # Default icons for DirectoryObject and VideoClipObject in case there isn't an image
-  DirectoryObject.thumb = R(ICON)
-  DirectoryObject.art = R(ART)
-  VideoClipObject.thumb = R(ICON)
-  VideoClipObject.art = R(ART)
-
-  # Set the default cache time
   HTTP.CacheTime = CACHE_1DAY
 
 ###################################################################################################
-
-@handler('/video/crackle', TITLE, thumb=ICON, art=ART)
+@handler('/video/crackle', TITLE)
 def MainMenu():
-    
+
   # Determine the location of the client, and the associated API region code
   location_details = JSON.ObjectFromURL(URL_GEO)
+
   if location_details['status']['messageCode'] != '0':
     return MessageContainer(location_details['status']['message'])
+
   location = location_details['CountryCode']
-  
+
   oc = ObjectContainer()
 
   oc.add(DirectoryObject(key = Callback(Genres, title = 'Movies', type = TYPE_MOVIES, location = location), title = 'Movies'))
   oc.add(DirectoryObject(key = Callback(Genres, title = 'Television', type = TYPE_TELEVISION, location = location), title = 'Television'))
   oc.add(DirectoryObject(key = Callback(Genres, title = 'Original', type = TYPE_ORIGINALS, location = location), title = 'Original'))
-  
+
   # This is currently disabled as it appears that they're still working on it. I originally didn't get any titles, now I get titles
   # which have no associated information.
   # oc.add(DirectoryObject(key = Callback(Genres, title = 'Collections', type = TYPE_COLLECTIONS, location = location), title = 'Collections'))
@@ -69,8 +56,8 @@ def MainMenu():
   return oc
 
 ###################################################################################################
-
 def Genres(title, type, location):
+
   oc = ObjectContainer(title2 = title)
 
   oc.add(DirectoryObject(key = Callback(ListChannels, title = 'All Genres', type = type, genre = GENRE_ALL, location = location), title = 'All Genres'))
@@ -84,31 +71,31 @@ def Genres(title, type, location):
   return oc
 
 ###################################################################################################
-
 def ListChannels(title, type, genre, location):
-  oc = ObjectContainer(title2 = title, view_group = 'InfoList')
 
+  oc = ObjectContainer(title2 = title, view_group = 'InfoList')
   titles = JSON.ObjectFromURL(URL_CATEGORIES % (type, genre, location))
+
   for title in titles['Entries']:
 
     oc.add(DirectoryObject(
       key = Callback(ListTitles, title = title['Name'], id = title['ID'], location = location), 
       title = title['Name'],
       summary = title['Description'],
-      thumb = title['ChannelArtTileLarge']))
-  
-  if len(oc) == 0:
-    return MessageContainer("Error", "No titles were found!")
-    
+      thumb = title['ChannelArtTileLarge']
+    ))
+
+  if len(oc) < 1:
+    return ObjectContainer(header="Error", message="No titles were found!")
+
   return oc
 
 ###################################################################################################
-
 def ListTitles(title, id, location):
+
   oc = ObjectContainer(title2 = title, view_group = 'InfoList')
-      
   titles = JSON.ObjectFromURL(URL_DETAILS % (id, location))
-    
+
   if len(titles['FolderList']) == 0:
     return MessageContainer("Error", "No titles were found!")
 
@@ -121,18 +108,18 @@ def ListTitles(title, id, location):
       genres = [ genre.strip() for genre in title['Genre'].split(',') ]
       content_rating = title['Rating']
       date = Datetime.ParseDate(title['ReleaseDate'])
-        
+
       duration_text = title['Duration']
       duration_dict = re.match("((?P<hours>[0-9]+):)?(?P<mins>[0-9]+):(?P<secs>[0-9]+)", duration_text).groupdict()
 
       hours = 0
       if duration_dict['hours'] != None:
           hours = int(duration_dict['hours'])
-          
+
       mins = int(duration_dict['mins'])
       secs = int(duration_dict['secs'])
       duration = ((((hours * 60) + mins) * 60) + secs) * 1000
-        
+
       if title['RootChannel'] == 'Movies':
         oc.add(MovieObject(
           url = url,
@@ -142,20 +129,19 @@ def ListTitles(title, id, location):
           genres = genres,
           content_rating = content_rating,
           duration = duration,
-          originally_available_at = date))
+          originally_available_at = date
+        ))
 
       elif title['RootChannel'] == 'Television' or title['RootChannel'] == 'Originals':
-          
+
         show = title['ParentChannelName']
 
-        season = None
         try: season = int(title['Season'])
-        except: pass
-        
-        index = None
+        except: season = None
+
         try: index = int(title['Episode'])
-        except: pass
-          
+        except: index = None
+
         oc.add(EpisodeObject(
           url = url,
           show = show,
@@ -166,11 +152,7 @@ def ListTitles(title, id, location):
           thumb = thumb,
           content_rating = content_rating,
           duration = duration,
-          originally_available_at = date))
-      
+          originally_available_at = date
+        ))
+
   return oc
-
-
-
-    
-      
