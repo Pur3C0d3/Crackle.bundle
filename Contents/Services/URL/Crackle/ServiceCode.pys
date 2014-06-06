@@ -170,8 +170,9 @@ def PlayVideo(url, res):
 def GetVideoDetails(url, res = None):
     video_id = GetVideoID(url)
     geo_code = GetGeoCode()
-    page_content = HTTP.Request(url).content
-    channel_id = re.findall('StartPlayer *\(' + video_id + ',.*fc=([0-9]+)', page_content)[0]  
+    
+    page_element = HTML.ElementFromURL(url)
+    channel_id = page_element.xpath("//*[@id='channelId']/@value")[0] 
     
     details = JSON.ObjectFromURL(URL_DETAILS % (channel_id, geo_code))
     
