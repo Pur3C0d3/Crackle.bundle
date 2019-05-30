@@ -10,9 +10,6 @@ TYPE_COLLECTIONS = 'collections'
 GENRE_ALL = 'all'
 GENRE_ACTION = 'Action'
 GENRE_COMEDY = 'Comedy'
-GENRE_CRIME = 'Crime'
-GENRE_HORROR = 'Horror'
-GENRE_SCI_FI = 'Sci-Fi'
 GENRE_THRILLER = 'Thriller'
 
 URL_GEO = 'http://ios-api.crackle.com/Service.svc/geo/country?format=json'
@@ -63,10 +60,7 @@ def Genres(title, type, location):
   oc.add(DirectoryObject(key = Callback(ListChannels, title = 'All Genres', type = type, genre = GENRE_ALL, location = location), title = 'All Genres'))
   oc.add(DirectoryObject(key = Callback(ListChannels, title = 'Action', type = type, genre = GENRE_ACTION, location = location), title = 'Action'))
   oc.add(DirectoryObject(key = Callback(ListChannels, title = 'Comedy', type = type, genre = GENRE_COMEDY, location = location), title = 'Comedy'))
-  oc.add(DirectoryObject(key = Callback(ListChannels, title = 'Crime', type = type, genre = GENRE_CRIME, location = location), title = 'Crime'))
   oc.add(DirectoryObject(key = Callback(ListChannels, title = 'Thriller', type = type, genre = GENRE_THRILLER, location = location), title = 'Thriller'))
-  oc.add(DirectoryObject(key = Callback(ListChannels, title = 'Horror', type = type, genre = GENRE_HORROR, location = location), title = 'Horror'))
-  oc.add(DirectoryObject(key = Callback(ListChannels, title = 'Sci-Fi', type = type, genre = GENRE_SCI_FI, location = location), title = 'Sci-Fi'))
 
   return oc
 
