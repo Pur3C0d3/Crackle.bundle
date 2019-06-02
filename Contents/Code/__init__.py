@@ -3,17 +3,22 @@ import re
 TITLE = 'Crackle'
 
 TYPE_MOVIES = 'movies'
-TYPE_TELEVISION = 'television'
-TYPE_ORIGINALS = 'originals'
-TYPE_COLLECTIONS = 'collections'
+TYPE_TELEVISION = 'shows'
 
 GENRE_ALL = 'all'
-GENRE_ACTION = 'Action'
-GENRE_COMEDY = 'Comedy'
-GENRE_THRILLER = 'Thriller'
+GENRE_ACTION = '2'
+GENRE_COMEDY = '18'
+GENRE_THRILLER = '58'
+GENRE_ANIME="8"
+GENRE_DRAMA="23"
+GENRE_ORIGINAL="324"
+GENRE_ICON="328"
 
-URL_GEO = 'http://ios-api.crackle.com/Service.svc/geo/country?format=json'
-URL_CATEGORIES = 'http://ios-api.crackle.com/Service.svc/browse/%s/full/%s/alpha/%s?format=json'
+
+
+
+URL_GEO = 'http://web-api-us.crackle.com/Service.svc/geo/country?format=json'
+URL_CATEGORIES = 'http://web-api-us.crackle.com/Service.svc/browse/%s/all/%s/alpha-asc/%s/20/1?format=json'
 URL_DETAILS = 'http://ios-api.crackle.com/Service.svc/channel/%s/folders/%s?format=json'
 URL_MEDIA_DETAILS = 'http://ios-api.crackle.com/Service.svc/details/media/%s/%s?format=json'
 
@@ -44,7 +49,6 @@ def MainMenu():
 
   oc.add(DirectoryObject(key = Callback(Genres, title = 'Movies', type = TYPE_MOVIES, location = location), title = 'Movies'))
   oc.add(DirectoryObject(key = Callback(Genres, title = 'Television', type = TYPE_TELEVISION, location = location), title = 'Television'))
-  oc.add(DirectoryObject(key = Callback(Genres, title = 'Original', type = TYPE_ORIGINALS, location = location), title = 'Original'))
 
   # This is currently disabled as it appears that they're still working on it. I originally didn't get any titles, now I get titles
   # which have no associated information.
@@ -61,6 +65,11 @@ def Genres(title, type, location):
   oc.add(DirectoryObject(key = Callback(ListChannels, title = 'Action', type = type, genre = GENRE_ACTION, location = location), title = 'Action'))
   oc.add(DirectoryObject(key = Callback(ListChannels, title = 'Comedy', type = type, genre = GENRE_COMEDY, location = location), title = 'Comedy'))
   oc.add(DirectoryObject(key = Callback(ListChannels, title = 'Thriller', type = type, genre = GENRE_THRILLER, location = location), title = 'Thriller'))
+  oc.add(DirectoryObject(key = Callback(ListChannels, title = 'Anime', type = type, genre = GENRE_ANIME, location = location), title = 'Anime'))
+  oc.add(DirectoryObject(key = Callback(ListChannels, title = 'Drama', type = type, genre = GENRE_DRAMA, location = location), title = 'Drama'))
+  oc.add(DirectoryObject(key = Callback(ListChannels, title = 'Crackle Originals', type = type, genre = GENRE_ORIGINAL, location = location), title = 'Crackle Originals'))
+  oc.add(DirectoryObject(key = Callback(ListChannels, title = 'Icon', type = type, genre = GENRE_ICON, location = location), title = 'Icon'))
+
 
   return oc
 
